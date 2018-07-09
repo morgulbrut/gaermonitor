@@ -86,6 +86,18 @@ float get_dht_humidity(){
 
 }
 
+void message(const uint8_t *payload, size_t size, port_t port){
+      Serial.println("-- MESSAGE");
+  Serial.print("Received " + String(size) + " bytes on port " + String(port) + ":");
+
+  for (int i = 0; i < size; i++)
+  {
+    Serial.print(" " + String(payload[i]));
+  }
+
+  Serial.println();
+}
+
 float get_light(){
     int light = analogRead(A0);
     Serial.print("Light: ");
@@ -97,6 +109,8 @@ void setup() {
   Serial.begin(9600);
 
   loraSerial.begin(57600);
+
+  ttn.onMessage(message);
 
   // Wait a maximum of 10s for Serial Monitor
   while (!Serial && millis() < 10000)
@@ -152,7 +166,7 @@ void loop() {
   // Send it off
   ttn.sendBytes(lpp.getBuffer(), lpp.getSize());
 
-  delay(600000);
-
+  //delay(600000);
+  delay(10000);
 }
 
